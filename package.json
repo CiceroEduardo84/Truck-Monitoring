@@ -4,8 +4,8 @@
   "description": "Aplicação feita para o monitoramento de caminhoes, os quais usados para entrada e saida de materiais.",
   "main": "src/server.ts",
   "scripts": {
-    "dev":"tsx watch src/server.ts",
-    "build":"tsup src",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src",
     "start": "node dist/server.js",
     "test": "vitest"
   },
@@ -17,7 +17,7 @@
     "Express",
     "cors",
     "cookie-parser",
-    "bcrypt", 
+    "bcrypt",
     "JWT",
     "zod",
     "truck monitoring",
@@ -45,8 +45,6 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7",
     "zod": "^3.22.4"
   }
 }
