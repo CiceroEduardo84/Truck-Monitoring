@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { pageNotFound } from "./errors/pageNotFound";
+import { postgreSqlConnection } from "./databases/postgreSQL";
 import { appErrors } from "./errors/appErrors";
 import { routers } from "./routes";
 import cors from "cors";
@@ -32,3 +33,8 @@ app.use(appErrors);
 app.listen(PORT, () => {
   console.log(`Server running in the PORT: http://localhost:${PORT}/`);
 });
+
+postgreSqlConnection()
+  .then(() => console.log("Database is connected..."))
+  .catch((error) => console.error("Database isn't connected -", error));
+  
