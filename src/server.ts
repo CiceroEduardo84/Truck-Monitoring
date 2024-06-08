@@ -6,6 +6,7 @@ import { appErrors } from "./errors/appErrors";
 import { routers } from "./routes";
 import cors from "cors";
 import "dotenv/config";
+import { runMigrations } from "./databases/postgreSQL/migrations";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,4 +38,5 @@ app.listen(PORT, () => {
 postgreSqlConnection()
   .then(() => console.log("Database is connected..."))
   .catch((error) => console.error("Database isn't connected -", error));
-  
+
+runMigrations();

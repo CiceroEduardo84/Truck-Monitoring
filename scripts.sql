@@ -1,0 +1,66 @@
+--Create Table User
+CREATE TABLE IF NOT EXISTS Users (
+	id_user VARCHAR PRIMARY KEY NOT NULL,
+	name VARCHAR NOT NULL,
+	email VARCHAR NOT NULL UNIQUE,
+	password VARCHAR NOT NULL,
+	type VARCHAR CHECK (type IN ('admin', 'porter', 'dispatcher')) DEFAULT 'porter',
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+-- Table Drivers
+CREATE TABLE IF NOT EXISTS Driver (
+	id_driver VARCHAR PRIMARY KEY NOT NULL,
+	cpf VARCHAR(11) NOT NULL UNIQUE,
+	name VARCHAR NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+-- Table Type_Vehicle
+CREATE TABLE IF NOT EXISTS Type_Vehicle (
+	id_type VARCHAR PRIMARY KEY NOT NULL,
+	name VARCHAR NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+-- Table Vehicle
+CREATE TABLE IF NOT EXISTS Vehicle (
+	id_vehicle VARCHAR PRIMARY KEY NOT NULL,
+	plate VARCHAR NOT NULL UNIQUE,
+	id_type VARCHAR NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_type) REFERENCES type_vehicle(id_type)
+);
+
+-- Historic_driver
+CREATE TABLE IF NOT EXISTS Historic_driver (
+	id VARCHAR PRIMARY KEY NOT NULL,
+	id_vehicle VARCHAR NOT NULL,
+	id_driver VARCHAR NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_vehicle) REFERENCES Vehicle(id_vehicle) ON DELETE CASCADE,
+	FOREIGN KEY (id_driver) REFERENCES Driver(id_driver) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Entry_history (
+	id_entry VARCHAR PRIMARY KEY NOT NULL,
+	id_vehicle VARCHAR NOT NULL,
+	id_user VARCHAR NOT NULL,
+	status VARCHAR CHECK (status IN ('awaiting', 'enter', 'loading', 'finished')) DEFAULT 'awaiting',
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_vehicle) REFERENCES Vehicle(id_vehicle) ON DELETE CASCADE,
+	FOREIGN KEY (id_user) REFERENCES Users(id_user)
+);
+
+DROP TABLE Users;
+DROP TABLE Driver;
+DROP TABLE Type_Vehicle;
+DROP TABLE Vehicle;
+DROP TABLE Historic_driver;
+DROP TABLE Entry_history;

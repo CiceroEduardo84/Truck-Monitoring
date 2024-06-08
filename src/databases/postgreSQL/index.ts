@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Client, Pool } from "pg";
 import "dotenv/config";
 
 export async function postgreSqlConnection() {
@@ -11,6 +11,6 @@ export async function postgreSqlConnection() {
   });
 
   const client = await db.connect();
-
+  
   return client;
 }
