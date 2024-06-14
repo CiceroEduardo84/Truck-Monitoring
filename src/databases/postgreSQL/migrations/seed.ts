@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { userAdmin } from "../../../configs/userAdmin";
 import { hash } from "bcrypt";
 
-export async function createdAdminUser() {
+export async function createAdminUser() {
   try {
     if (!userAdmin.email || !userAdmin.password) {
       throw new Error(
@@ -33,7 +33,7 @@ export async function createdAdminUser() {
       userAdmin.isAdmin,
     ]);
 
-    console.log("Usuário admin criado com sucesso!");
+    console.log("Usuário admin criado com sucesso!", result.rowCount);
   } catch (error) {
     console.error("Erro ao criar usuário admin:", error);
   }
