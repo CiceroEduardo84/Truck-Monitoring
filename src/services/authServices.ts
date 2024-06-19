@@ -1,0 +1,26 @@
+import { compare } from "bcrypt";
+import { sign } from "jsonwebtoken";
+import { LoginDataType } from "../validations/loginSchema";
+import { appErrors } from "../errors/appErrors";
+
+export const authServices = {
+  async login(data: LoginDataType, repository: UserRepositoryTypes) {
+    try {
+      const { email, password } = data;
+
+      const user = await repository.getUserByEmail(email);
+      if (!user) throw appErrors("email or password invalid!", 401);
+
+      const passwordCheck = await compare(password, user.password);
+      if (!passwordCheck) throw appErrors("email or password invalid!", 401);
+
+      const token = sign({ id: user.id }, process.env.SECRET_TOKEN, {
+        expiresIn: process.env.EXPIRESIN_TOKEN,
+      });
+
+      return { id: user.id, token };
+    } catch (error) {
+      throw error;
+    }
+  },
+};
