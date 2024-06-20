@@ -1,4 +1,5 @@
-import { postgreSqlConnection } from "../databases/postgreSQL";
+import { sqliteConnection } from "../databases/sqlite3";
+import { UserDataTypes } from "../validations/userSchema";
 
 export type CreateUserDataType = UserDataTypes & { id: string };
 
@@ -7,12 +8,12 @@ export const userRepository = {
     try {
       const { id, name, email, password } = data;
 
-      const db = await postgreSqlConnection();
+      const db = await sqliteConnection();
 
       const querySQL =
         "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)";
 
-      await db.query(querySQL, [id, name, email, password]);
+      await db.run(querySQL, [id, name, email, password]);
 
       return { id, name, email, password };
     } catch (error) {
@@ -22,10 +23,10 @@ export const userRepository = {
 
   async getUserByID(id: string) {
     try {
-      const db = await postgreSqlConnection();
+      const db = await sqliteConnection();
 
       const queryUserSQL = "SELECT * FROM users WHERE id == ?";
-      const user = await db.query(queryUserSQL, [id]);
+      const user = await db.get(queryUserSQL, [id]);
 
       const queryTasksSQL = `
         SELECT
@@ -37,7 +38,7 @@ export const userRepository = {
         WHERE user_id = ?;
       `;
 
-      const tasksInfo = await db.query(queryTasksSQL, [id]);
+      const tasksInfo = await db.get(queryTasksSQL, [id]);
 
       return { ...user, tasksInfo };
     } catch (error) {
@@ -47,10 +48,10 @@ export const userRepository = {
 
   async getUserByEmail(email: string) {
     try {
-      const db = await postgreSqlConnection();
+      const db = await sqliteConnection();
 
       const querySQL = "SELECT * FROM users WHERE email == ?";
-      const user = await db.query(querySQL, [email]);
+      const user = await db.get(querySQL, [email]);
 
       return user;
     } catch (error) {
