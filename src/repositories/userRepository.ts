@@ -22,30 +22,30 @@ export const userRepository = {
     }
   },
 
-  //   async getUserByID(id: string) {
-  //     try {
-  //       const db = await postgreSqlConnection();
+  async getUserByID(id: string) {
+    try {
+      const db = await postgreSqlConnection();
 
-  //       const queryUserSQL = "SELECT * FROM users WHERE id == ?";
-  //       const user = await db.get(queryUserSQL, [id]);
+      const queryUserSQL = "SELECT * FROM users WHERE id == 1$";
+      const user: QueryResult<any> = await db.query(queryUserSQL, [id]);
 
-  //       const queryTasksSQL = `
-  //         SELECT
-  //           COUNT(*) AS total,
-  //           SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed,
-  //           SUM(CASE WHEN status = 'pending' AND date >= CURRENT_DATE THEN 1 ELSE 0 END) AS pending,
-  //           SUM(CASE WHEN status = 'pending' AND date < CURRENT_DATE THEN 1 ELSE 0 END) AS late
-  //         FROM tasks
-  //         WHERE user_id = ?;
-  //       `;
 
-  //       const tasksInfo = await db.get(queryTasksSQL, [id]);
+      if (user.rows.length > 0) {
+        const data = user.rows[0];
+        return {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          type: data.type,
+        };
+      }
 
-  //       return { ...user, tasksInfo };
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   },
+      return undefined;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   async getUserByEmail(email: string) {
     try {

@@ -6,7 +6,7 @@ import { appError } from "../errors/appError";
 
 export type UserRepositoryTypes = {
   createUser(data: CreateUserDataType): Promise<CreateUserDataType | undefined>;
-  // getUserByID(id: string): Promise<{ password?: string } | undefined>;
+  getUserByID(id: string): Promise<{ password?: string } | undefined>;
   getUserByEmail(email: string): Promise<CreateUserDataType | undefined>;
 };
 
@@ -41,17 +41,17 @@ export const userServices = {
     }
   },
 
-  // async read(id: string, repository: UserRepositoryTypes) {
-  //   try {
-  //     const userData = await repository.getUserByID(id);
+  async read(id: string, repository: UserRepositoryTypes) {
+    try {
+      const userData = await repository.getUserByID(id);
 
-  //     if (!userData) throw appError("user not found!", 404);
+      if (!userData) throw appError("user not found!", 404);
 
-  //     delete userData.password;
+      delete userData.password;
 
-  //     return userData;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
+      return userData;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
