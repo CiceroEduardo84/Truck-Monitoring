@@ -27,4 +27,14 @@ export const authControllers = {
       next(error);
     }
   },
+  async logout(_req: Request, res: Response, next: NextFunction) {
+    try {
+      return res
+        .clearCookie(process.env.KEY_TOKEN)
+        .status(200)
+        .json({ message: "logout completed successfully!" });
+    } catch (error) {
+      return next(error);
+    }
+  },
 };
