@@ -23,7 +23,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
     const { id } = decoded as JwtPayload;
     req.userID = id;
-
+    
     return next();
   });
 }

@@ -16,7 +16,6 @@ export const userServices = {
       const { name, email, password, type } = data;
 
       const user = await repository.getUserByEmail(email);
-      console.log(user);
       
       if (user) throw appError("email already exists!", 400);
 
@@ -44,7 +43,7 @@ export const userServices = {
   async read(id: string, repository: UserRepositoryTypes) {
     try {
       const userData = await repository.getUserByID(id);
-
+      
       if (!userData) throw appError("user not found!", 404);
 
       delete userData.password;

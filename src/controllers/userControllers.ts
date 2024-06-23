@@ -23,7 +23,7 @@ export const userControllers = {
   async read(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = UUIDSchema("user").parse({ id: req.userID });
-
+      
       const userData = await userServices.read(id, userRepository);
 
       return res.status(200).json(userData);

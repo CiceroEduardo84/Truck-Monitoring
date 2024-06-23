@@ -18,7 +18,7 @@ export const authServices = {
       const token = sign({ id: user.id }, process.env.SECRET_TOKEN, {
         expiresIn: process.env.EXPIRESIN_TOKEN,
       });
-
+      
       return { id: user.id, token };
     } catch (error) {
       throw error;
