@@ -26,14 +26,13 @@ export const userRepository = {
     try {
       const db = await postgreSqlConnection();
 
-      const queryUserSQL = "SELECT * FROM users WHERE id == 1$";
-      const user: QueryResult<any> = await db.query(queryUserSQL, [id]);
-
+      const queryUserSQL = "SELECT * FROM users WHERE id_user = $1";
+      const user = await db.query(queryUserSQL, [id]);
 
       if (user.rows.length > 0) {
         const data = user.rows[0];
         return {
-          id: data.id,
+          id: data.id_user,
           name: data.name,
           email: data.email,
           password: data.password,
@@ -56,8 +55,9 @@ export const userRepository = {
 
       if (result.rows.length > 0) {
         const user = result.rows[0];
+
         return {
-          id: user.id,
+          id: user.id_user,
           name: user.name,
           email: user.email,
           password: user.password,
