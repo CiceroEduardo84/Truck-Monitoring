@@ -27,7 +27,7 @@ export const userRepository = {
       const db = await postgreSqlConnection();
 
       const queryUserSQL = "SELECT * FROM users WHERE id_user = $1";
-      const user = await db.query(queryUserSQL, [id]);
+      const user: QueryResult<any> = await db.query(queryUserSQL, [id]);
 
       if (user.rows.length > 0) {
         const data = user.rows[0];
