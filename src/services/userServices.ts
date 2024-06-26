@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { hash } from "bcrypt";
-import { CreateUserDataType } from "../repositories/userRepository";
+import {
+  CreateUserDataType,
+  UpdateUserDataTypes,
+} from "../repositories/userRepository";
 import { UserDataTypes } from "../validations/userSchema";
 import { appError } from "../errors/appError";
 
@@ -8,6 +11,10 @@ export type UserRepositoryTypes = {
   createUser(data: CreateUserDataType): Promise<CreateUserDataType | undefined>;
   getUserByID(id: string): Promise<{ password?: string } | undefined>;
   getUserByEmail(email: string): Promise<CreateUserDataType | undefined>;
+  updateTask(
+    id: string,
+    data: UpdateUserDataTypes
+  ): Promise<UpdateUserDataTypes | undefined>;
 };
 
 export const userServices = {
@@ -16,7 +23,7 @@ export const userServices = {
       const { name, email, password, type } = data;
 
       const user = await repository.getUserByEmail(email);
-      
+
       if (user) throw appError("email already exists!", 400);
 
       const passwordHash = await hash(password, 10);
@@ -26,7 +33,7 @@ export const userServices = {
         name,
         email,
         password: passwordHash,
-        type
+        type,
       };
 
       const userCreated = await repository.createUser(userData);
@@ -43,12 +50,26 @@ export const userServices = {
   async read(id: string, repository: UserRepositoryTypes) {
     try {
       const userData = await repository.getUserByID(id);
-      
+
       if (!userData) throw appError("user not found!", 404);
 
       delete userData.password;
 
       return userData;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async update(
+    id: string,
+    data: UserDataTypes,
+    repository: UserRepositoryTypes
+  ) {
+    try {
+      const { email, name, password, type } = data;
+
+      const user = await repository.getUserByID(id);
+      if (!user) throw appError("User not found!", 404);
     } catch (error) {
       throw error;
     }

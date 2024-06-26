@@ -8,3 +8,4 @@ export const userRoutes = Router();
 userRoutes.use(authMiddleware);
 userRoutes.get("/user", userControllers.read);
 userRoutes.post("/user", isAdminMiddleware, userControllers.create);
+userRoutes.put("/user:id", isAdminMiddleware, userControllers.upadte);

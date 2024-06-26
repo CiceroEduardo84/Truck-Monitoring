@@ -3,6 +3,7 @@ import { postgreSqlConnection } from "../databases/postgreSQL";
 import { UserDataTypes } from "../validations/userSchema";
 
 export type CreateUserDataType = UserDataTypes & { id: string };
+export type UpdateUserDataTypes = CreateUserDataType & { updated_at: Date };
 
 export const userRepository = {
   async createUser(data: CreateUserDataType) {
