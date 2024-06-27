@@ -32,13 +32,13 @@ export const userControllers = {
     }
   },
 
-  async upadte(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = UUIDSchema("user").parse(req.params);
       const { email, name, password, type } = userSchema.parse(req.body);
 
-      const userUpdated = await userServices.update(id,
-        { name, email, password, type },
+      const userUpdated = await userServices.update(
+        { id, name, email, password, type },
         userRepository
       );
 

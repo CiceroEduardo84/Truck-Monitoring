@@ -1,12 +1,9 @@
 import { QueryResult } from "pg";
 import { postgreSqlConnection } from "../databases/postgreSQL";
-import { UserDataTypes } from "../validations/userSchema";
-
-export type CreateUserDataType = UserDataTypes & { id: string };
-export type UpdateUserDataTypes = CreateUserDataType & { updated_at: Date };
+import { UpdateUserDataTypes, UserData } from "../services/userServices";
 
 export const userRepository = {
-  async createUser(data: CreateUserDataType) {
+  async createUser(data: UserData) {
     try {
       const { id, name, email, password, type } = data;
 
@@ -67,6 +64,26 @@ export const userRepository = {
       }
 
       return undefined;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async updateUser(data: UpdateUserDataTypes) {
+    try {
+      const { id, name, email, password, type, updated_at } = data;
+
+      const db = await postgreSqlConnection();
+
+      const querySQL = `
+        UPDATE users 
+        SET name = ?, email = ?, password = ?, type = ?, updated_at = ?
+        WHERE id = ?;
+      `;
+
+      await db.query(querySQL, [name, email, password, type, updated_at, id]);
+
+      return { id, name, email, password, type, updated_at };
     } catch (error) {
       throw error;
     }

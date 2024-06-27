@@ -1,20 +1,18 @@
 import { randomUUID } from "node:crypto";
 import { hash } from "bcrypt";
-import {
-  CreateUserDataType,
-  UpdateUserDataTypes,
-} from "../repositories/userRepository";
 import { UserDataTypes } from "../validations/userSchema";
 import { appError } from "../errors/appError";
 
+export type UserData = UserDataTypes & { id: string };
+export type UpdateUserDataTypes = UserData & { updated_at: Date };
+
 export type UserRepositoryTypes = {
-  createUser(data: CreateUserDataType): Promise<CreateUserDataType | undefined>;
-  getUserByID(id: string): Promise<{ password?: string } | undefined>;
-  getUserByEmail(email: string): Promise<CreateUserDataType | undefined>;
-  updateTask(
-    id: string,
-    data: UpdateUserDataTypes
-  ): Promise<UpdateUserDataTypes | undefined>;
+  createUser(data: UserData): Promise<UserData | undefined>;
+  getUserByID(
+    id: string
+  ): Promise<(Omit<UserData, "password"> & { password?: string }) | undefined>;
+  getUserByEmail(email: string): Promise<UserData | undefined>;
+  updateUser(data: UserData): Promise<UpdateUserDataTypes | undefined>;
 };
 
 export const userServices = {
@@ -60,16 +58,26 @@ export const userServices = {
       throw error;
     }
   },
-  async update(
-    id: string,
-    data: UserDataTypes,
-    repository: UserRepositoryTypes
-  ) {
-    try {
-      const { email, name, password, type } = data;
 
-      const user = await repository.getUserByID(id);
-      if (!user) throw appError("User not found!", 404);
+  async update(data: UserData, repository: UserRepositoryTypes) {
+    try {
+      const { id, email, name, password, type } = data;
+
+      const userRead = await repository.getUserByID(id);
+      if (!userRead) throw appError("User not found!", 404);
+
+      const userToUpdate = {
+        id,
+        email,
+        name,
+        password,
+        type,
+        updated_at: new Date(),
+      };
+
+      const userUpdate = await repository.updateUser(userToUpdate);
+
+      return userUpdate;
     } catch (error) {
       throw error;
     }
