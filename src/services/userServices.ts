@@ -66,16 +66,24 @@ export const userServices = {
       const userRead = await repository.getUserByID(id);
       if (!userRead) throw appError("User not found!", 404);
 
+      const userByEmail = await repository.getUserByEmail(email);
+      if (userByEmail && (userByEmail.email != userRead.email)) {
+        throw appError("Email already exists", 409);
+      }
+
+      const passwordHash = await hash(password, 10);
       const userToUpdate = {
         id,
         email,
         name,
-        password,
+        password: passwordHash,
         type,
         updated_at: new Date(),
       };
 
       const userUpdate = await repository.updateUser(userToUpdate);
+      if (!userUpdate) return;
+      userUpdate.password = "*".repeat(userUpdate.password.length);
 
       return userUpdate;
     } catch (error) {

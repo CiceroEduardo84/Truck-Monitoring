@@ -77,8 +77,8 @@ export const userRepository = {
 
       const querySQL = `
         UPDATE users 
-        SET name = ?, email = ?, password = ?, type = ?, updated_at = ?
-        WHERE id = ?;
+        SET name = $1, email = $2, password = $3, type = $4, updated_at = $5
+        WHERE id_user = $6;
       `;
 
       await db.query(querySQL, [name, email, password, type, updated_at, id]);
