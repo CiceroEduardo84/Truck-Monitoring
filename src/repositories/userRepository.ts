@@ -6,12 +6,10 @@ export const userRepository = {
   async createUser(data: UserData) {
     try {
       const { id, name, email, password, type } = data;
-
       const db = await postgreSqlConnection();
 
       const querySQL =
         "INSERT INTO users (id_user, name, email, password, type) VALUES ($1, $2, $3, $4, $5)";
-
       await db.query(querySQL, [id, name, email, password, type]);
 
       return { id, name, email, password, type };
@@ -72,7 +70,6 @@ export const userRepository = {
   async updateUser(data: UpdateUserDataTypes) {
     try {
       const { id, name, email, password, type, updated_at } = data;
-
       const db = await postgreSqlConnection();
 
       const querySQL = `
@@ -80,10 +77,22 @@ export const userRepository = {
         SET name = $1, email = $2, password = $3, type = $4, updated_at = $5
         WHERE id_user = $6;
       `;
-
       await db.query(querySQL, [name, email, password, type, updated_at, id]);
 
       return { id, name, email, password, type, updated_at };
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async deleteUser(id: string) {
+    try {
+      const db = await postgreSqlConnection();
+
+      const querySQL = "DELETE FROM tasks WHERE id = ?;";
+      await db.query(querySQL, [id]);
+
+      return { id };
     } catch (error) {
       throw error;
     }

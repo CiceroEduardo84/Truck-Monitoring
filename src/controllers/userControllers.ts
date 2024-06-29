@@ -47,4 +47,16 @@ export const userControllers = {
       return next(error);
     }
   },
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = UUIDSchema("user").parse(req.params);
+
+      const userData = await userServices.delete(id, userRepository);
+
+      return res.status(200).json({ message: "user deleted!", userData});
+    } catch (error) {
+      return next(error);
+    }
+  },
 };

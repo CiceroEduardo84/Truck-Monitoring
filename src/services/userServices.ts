@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { hash } from "bcrypt";
 import { UserDataTypes } from "../validations/userSchema";
 import { appError } from "../errors/appError";
+import { userRepository } from "../repositories/userRepository";
 
 export type UserData = UserDataTypes & { id: string };
 export type UpdateUserDataTypes = UserData & { updated_at: Date };
@@ -13,6 +14,7 @@ export type UserRepositoryTypes = {
   ): Promise<(Omit<UserData, "password"> & { password?: string }) | undefined>;
   getUserByEmail(email: string): Promise<UserData | undefined>;
   updateUser(data: UserData): Promise<UpdateUserDataTypes | undefined>;
+  deleteUser(id: string): Promise<{ id: string }>;
 };
 
 export const userServices = {
@@ -67,7 +69,7 @@ export const userServices = {
       if (!userRead) throw appError("User not found!", 404);
 
       const userByEmail = await repository.getUserByEmail(email);
-      if (userByEmail && (userByEmail.email != userRead.email)) {
+      if (userByEmail && userByEmail.email != userRead.email) {
         throw appError("Email already exists", 409);
       }
 
@@ -86,6 +88,21 @@ export const userServices = {
       userUpdate.password = "*".repeat(userUpdate.password.length);
 
       return userUpdate;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async delete(id: string,repository: UserRepositoryTypes) {
+    try {
+      const user = await repository.getUserByID(id);
+      if (!user) throw appError("user not found!", 404);
+
+      const userDeleted = await repository.deleteUser(id);
+
+      if (!userDeleted) throw appError("task not deleted!", 500);
+
+      return userDeleted;
     } catch (error) {
       throw error;
     }
