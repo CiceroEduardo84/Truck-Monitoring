@@ -3,6 +3,7 @@ import { userSchema } from "../validations/userSchema";
 import { userServices } from "../services/userServices";
 import { userRepository } from "../repositories/userRepository";
 import { UUIDSchema } from "../validations/UUIDSchema";
+import { userPaginationSchema } from "../validations/userPaginationSchema";
 
 export const userControllers = {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -32,6 +33,25 @@ export const userControllers = {
     }
   },
 
+  async readings(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { limit, offset, filter } = userPaginationSchema.parse(req.query);
+
+      const users = await userServices.readings(
+        {
+          limit,
+          offset,
+          filter,
+        },
+        userRepository
+      );
+
+      return res.status(200).json({ users });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = UUIDSchema("user").parse(req.params);
@@ -54,7 +74,7 @@ export const userControllers = {
 
       const userData = await userServices.delete(id, userRepository);
 
-      return res.status(200).json({ message: "user deleted!", userData});
+      return res.status(200).json({ message: "user deleted!", userData });
     } catch (error) {
       return next(error);
     }

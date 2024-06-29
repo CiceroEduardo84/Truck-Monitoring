@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { hash } from "bcrypt";
 import { UserDataTypes } from "../validations/userSchema";
 import { appError } from "../errors/appError";
-import { userRepository } from "../repositories/userRepository";
+import { UserPaginationSchema } from "../validations/userPaginationSchema";
 
 export type UserData = UserDataTypes & { id: string };
 export type UpdateUserDataTypes = UserData & { updated_at: Date };
@@ -13,6 +13,7 @@ export type UserRepositoryTypes = {
     id: string
   ): Promise<(Omit<UserData, "password"> & { password?: string }) | undefined>;
   getUserByEmail(email: string): Promise<UserData | undefined>;
+  getUsers(data:UserPaginationSchema): Promise<UpdateUserDataTypes[] | undefined>;
   updateUser(data: UserData): Promise<UpdateUserDataTypes | undefined>;
   deleteUser(id: string): Promise<{ id: string }>;
 };
@@ -61,6 +62,25 @@ export const userServices = {
     }
   },
 
+  async readings(data: UserPaginationSchema, repository: UserRepositoryTypes) {
+    try {
+      const { limit, offset, filter } = data;
+
+      if (!limit || !offset || !filter) {
+        throw appError(
+          "please inform query params limit, offset and filter!",
+          400
+        );
+      }
+
+      const userTasks = await repository.getUsers({ limit, offset, filter });
+
+      return userTasks;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async update(data: UserData, repository: UserRepositoryTypes) {
     try {
       const { id, email, name, password, type } = data;
@@ -93,7 +113,7 @@ export const userServices = {
     }
   },
 
-  async delete(id: string,repository: UserRepositoryTypes) {
+  async delete(id: string, repository: UserRepositoryTypes) {
     try {
       const user = await repository.getUserByID(id);
       if (!user) throw appError("user not found!", 404);

@@ -1,6 +1,8 @@
 import { QueryResult } from "pg";
 import { postgreSqlConnection } from "../databases/postgreSQL";
 import { UpdateUserDataTypes, UserData } from "../services/userServices";
+import { UserPaginationSchema } from "../validations/userPaginationSchema";
+import { appError } from "../errors/appError";
 
 export const userRepository = {
   async createUser(data: UserData) {
@@ -67,6 +69,68 @@ export const userRepository = {
     }
   },
 
+  async getUsers(data: UserPaginationSchema) {
+    try {
+      const { limit, offset, filter } = data;
+      
+      const db = await postgreSqlConnection();
+      let querySQL = "";
+
+      switch (filter) {
+        case "all":
+          querySQL = `
+            SELECT * FROM users
+            ORDER BY name ASC
+            LIMIT $1 OFFSET $2;
+          `;
+          break;
+
+        case "admin":
+          querySQL = `
+            SELECT * FROM users 
+            WHERE type = 'admin'
+            ORDER BY name ASC 
+            LIMIT $1 OFFSET $2;
+          `;
+          break;
+
+        case "porter":
+          querySQL = `
+            SELECT * FROM users 
+            WHERE type = 'porter'
+            ORDER BY name ASC 
+            LIMIT $1 OFFSET $2;
+          `;
+          break;
+
+        case "dispatcher":
+          querySQL = `
+            SELECT * FROM users 
+            WHERE type = 'dispatcher'
+            ORDER BY name ASC 
+            LIMIT $1 OFFSET $2;
+          `;
+          break;
+
+        default:
+          throw appError("invalid filter!", 400);
+      }
+
+      const users: QueryResult<any> = await db.query(querySQL, [
+        limit,
+        offset,
+      ]);
+
+      if (users.rows.length > 0) {
+        return users.rows;
+      }
+
+      return undefined;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async updateUser(data: UpdateUserDataTypes) {
     try {
       const { id, name, email, password, type, updated_at } = data;
@@ -89,7 +153,7 @@ export const userRepository = {
     try {
       const db = await postgreSqlConnection();
 
-      const querySQL = "DELETE FROM tasks WHERE id = ?;";
+      const querySQL = "DELETE FROM users WHERE id_user = $1;";
       await db.query(querySQL, [id]);
 
       return { id };
