@@ -15,7 +15,7 @@ export type UserRepositoryTypes = {
   getUserByEmail(email: string): Promise<UserData | undefined>;
   getUsers(data:UserPaginationSchema): Promise<UpdateUserDataTypes[] | undefined>;
   updateUser(data: UserData): Promise<UpdateUserDataTypes | undefined>;
-  deleteUser(id: string): Promise<{ id: string }>;
+  deleteUser(id: string): Promise<{ id: string | undefined }>;
 };
 
 export const userServices = {
