@@ -120,7 +120,7 @@ export const userServices = {
 
       const userDeleted = await repository.deleteUser(id);
 
-      if (!userDeleted) throw appError("task not deleted!", 500);
+      if (!userDeleted.id) throw appError("user not deleted!", 500);
 
       return userDeleted;
     } catch (error) {

@@ -100,6 +100,7 @@ export const userRepositoryInMemory = {
 
   async deleteUser(id: string) {
     try {
+      if (id == "2") return {id: undefined};
       const indexUser = users.findIndex((user) => user.id == id);
 
       users.splice(indexUser, 1);
