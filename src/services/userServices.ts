@@ -90,7 +90,7 @@ export const userServices = {
 
       const userByEmail = await repository.getUserByEmail(email);
       if (userByEmail && userByEmail.email != userRead.email) {
-        throw appError("Email already exists", 409);
+        throw appError("Email already exists!", 409);
       }
 
       const passwordHash = await hash(password, 10);
