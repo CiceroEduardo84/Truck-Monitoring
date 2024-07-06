@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { UserData, userServices } from "../services/userServices";
-import { userRepositoryInMemory } from "../repositories/userRepositoryInMemory";
-import { UserDataTypes } from "../validations/userSchema";
+import { userServices } from "../../services/userServices";
+import { userRepositoryInMemory } from "../../repositories/userRepositoryInMemory";
+import { UserDataTypes } from "../../validations/userSchema";
 
 describe("test create user functions", async () => {
   const user: UserDataTypes = {

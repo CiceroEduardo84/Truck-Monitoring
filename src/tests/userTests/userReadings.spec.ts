@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { userServices } from "../services/userServices";
-import { userRepositoryInMemory } from "../repositories/userRepositoryInMemory";
-import { UserPaginationSchema } from "../validations/userPaginationSchema";
+import { userServices } from "../../services/userServices";
+import { userRepositoryInMemory } from "../../repositories/userRepositoryInMemory";
+import { UserPaginationSchema } from "../../validations/userPaginationSchema";
 
 describe("test readings users functions", async () => {
   const data: UserPaginationSchema = {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { userServices } from "../services/userServices";
-import { userRepositoryInMemory } from "../repositories/userRepositoryInMemory";
+import { userServices } from "../../services/userServices";
+import { userRepositoryInMemory } from "../../repositories/userRepositoryInMemory";
 
 describe("test delete user functions", async () => {
   it("should read a user!", async () => {
