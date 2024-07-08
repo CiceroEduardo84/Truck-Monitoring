@@ -6,9 +6,9 @@ import { typesVehiclesControllers } from "../controllers/typesVehiclesController
 export const typeVehicleRoutes = Router();
 
 typeVehicleRoutes.use(authMiddleware);
-typeVehicleRoutes.get("/typevehicles", typesVehiclesControllers.read);
+// typeVehicleRoutes.get("/typevehicles", typesVehiclesControllers.read);
 
 typeVehicleRoutes.use(isAdminMiddleware);
 typeVehicleRoutes.post("/typevehicles", typesVehiclesControllers.create);
-typeVehicleRoutes.put("/typevehicles/:id", typesVehiclesControllers.update);
-typeVehicleRoutes.delete("/typevehicles/:id", typesVehiclesControllers.delete);
+// typeVehicleRoutes.put("/typevehicles/:id", typesVehiclesControllers.update);
+// typeVehicleRoutes.delete("/typevehicles/:id", typesVehiclesControllers.delete);

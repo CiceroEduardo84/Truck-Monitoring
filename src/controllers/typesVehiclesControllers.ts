@@ -1,47 +1,19 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, response } from "express";
 import { typeVehicleSchema } from "../validations/typeVehicleSchema";
+import { typeVehicleService } from "../services/typeVehicleService";
+import { typeVehicleRepository } from "../repositories/typeVehicleRepository";
 
 export const typesVehiclesControllers = {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const {name} = typeVehicleSchema.parse(req.body);
+      const { name } = typeVehicleSchema.parse(req.body);
 
-      return res.status(201).json({ message: "user created!",  });
-    } catch (error) {
-      return next(error);
-    }
-  },
+      const typeCreated = await typeVehicleService.create(
+        name,
+        typeVehicleRepository
+      );
 
-  async read(req: Request, res: Response, next: NextFunction) {
-    try {
-
-      return res.status(200).json();
-    } catch (error) {
-      return next(error);
-    }
-  },
-
-  async readings(req: Request, res: Response, next: NextFunction) {
-    try {
-
-      return res.status(200).json({  });
-    } catch (error) {
-      return next(error);
-    }
-  },
-
-  async update(req: Request, res: Response, next: NextFunction) {
-    try {
-      return res.status(200).json({ message: "task updated!" });
-    } catch (error) {
-      return next(error);
-    }
-  },
-
-  async delete(req: Request, res: Response, next: NextFunction) {
-    try {
-
-      return res.status(200).json({ message: "user deleted!", });
+      return res.status(201).json({ message: "Type created!", typeCreated });
     } catch (error) {
       return next(error);
     }
