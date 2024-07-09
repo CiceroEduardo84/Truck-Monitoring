@@ -56,7 +56,7 @@ describe("test update user functions", async () => {
         userRepositoryInMemory
       );
       if (userUpdated)
-        throw new Error("expected an error but the user was found!");
+        throw new Error("I was expecting an error, but the email didn't exist!");
     } catch (error: any) {
       expect(error.message).toBe("Email already exists!");
     }

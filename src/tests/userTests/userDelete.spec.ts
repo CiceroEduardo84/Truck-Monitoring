@@ -3,7 +3,7 @@ import { userServices } from "../../services/userServices";
 import { userRepositoryInMemory } from "../../repositories/userRepositoryInMemory";
 
 describe("test delete user functions", async () => {
-  it("should read a user!", async () => {
+  it("should delete a user!", async () => {
     const userDeleted = await userServices.delete("1", userRepositoryInMemory);
     expect(userDeleted.id).toEqual("1");
   });
