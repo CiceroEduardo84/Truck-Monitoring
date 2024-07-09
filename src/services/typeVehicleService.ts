@@ -2,10 +2,12 @@ import { appError } from "../errors/appError";
 import { randomUUID } from "node:crypto";
 
 export type TypeVehicle = { id: string; name: string };
+export type ReadTypes = Omit<TypeVehicle, "id"> & { id_type: string };
 
 export type typeVehicleRepository = {
   createType(data: TypeVehicle): Promise<{ name: string } | undefined>;
   checkType(name: string): Promise<number | undefined>;
+  getTypes(): Promise<ReadTypes[] | undefined>;
 };
 
 export const typeVehicleService = {
@@ -25,5 +27,11 @@ export const typeVehicleService = {
     const createType = await repository.createType(type);
 
     return createType;
+  },
+
+  async read(repository: typeVehicleRepository) {
+    const typesVehicles = repository.getTypes();
+
+    return typesVehicles;
   },
 };
