@@ -5,7 +5,7 @@ export type TypeVehicle = { id: string; name: string };
 
 export type typeVehicleRepository = {
   createType(data: TypeVehicle): Promise<{ name: string } | undefined>;
-  checkType(name: string): Promise<{ count: number } | undefined>;
+  checkType(name: string): Promise<number | undefined>;
 };
 
 export const typeVehicleService = {
@@ -14,7 +14,7 @@ export const typeVehicleService = {
 
     const typeExists = await repository.checkType(typeName);
     if (typeExists) {
-      throw appError("Typo already exists!", 400);
+      throw appError("Type already exists!", 400);
     }
 
     const type = {

@@ -9,3 +9,5 @@ export const typeVehicleSchema = z.object({
     .min(3, "Name must have at least 3 characters!")
     .max(255, "Max name length exceeded!"),
 });
+
+export type TypeVehicleSchema = z.infer<typeof typeVehicleSchema>;
