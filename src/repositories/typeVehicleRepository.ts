@@ -1,6 +1,6 @@
 import { QueryResult } from "pg";
 import { postgreSqlConnection } from "../databases/postgreSQL";
-import { TypeVehicle } from "../services/typeVehicleService";
+import { TypeVehicle, UpdateType } from "../services/typeVehicleService";
 
 export const typeVehicleRepository = {
   async createType(data: TypeVehicle) {
@@ -40,5 +40,19 @@ export const typeVehicleRepository = {
     }
 
     return undefined;
+  },
+
+  async updateType(data: UpdateType) {
+    try {
+      const { id, name, updated_at } = data;
+      const db = await postgreSqlConnection();
+
+      const querySQL = `UPDATE Type_Vehicle SET name=$1, updated_at = $2 WHERE id_type = $3`;
+      await db.query(querySQL, [name, updated_at, id]);
+
+      return { id, name };
+    } catch (error) {
+      throw error;
+    }
   },
 };

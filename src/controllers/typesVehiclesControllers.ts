@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { typeVehicleSchema } from "../validations/typeVehicleSchema";
 import { typeVehicleService } from "../services/typeVehicleService";
 import { typeVehicleRepository } from "../repositories/typeVehicleRepository";
+import { UUIDSchema } from "../validations/UUIDSchema";
 
 export const typesVehiclesControllers = {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -24,6 +25,22 @@ export const typesVehiclesControllers = {
       const types = await typeVehicleService.read(typeVehicleRepository);
 
       return res.status(201).json({ types });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = UUIDSchema("typeVehicle").parse(req.params);
+      const { name } = typeVehicleSchema.parse(req.body);
+
+      const typeUpdated = typeVehicleService.update(
+        { id, name },
+        typeVehicleRepository
+      );
+
+      return res.status(201).json({ message: "Type updated!", typeUpdated });
     } catch (error) {
       return next(error);
     }
