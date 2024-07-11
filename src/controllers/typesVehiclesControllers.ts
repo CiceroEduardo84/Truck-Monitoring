@@ -35,12 +35,27 @@ export const typesVehiclesControllers = {
       const { id } = UUIDSchema("typeVehicle").parse(req.params);
       const { name } = typeVehicleSchema.parse(req.body);
 
-      const typeUpdated = typeVehicleService.update(
+      const typeUpdated = await typeVehicleService.update(
         { id, name },
         typeVehicleRepository
       );
 
       return res.status(201).json({ message: "Type updated!", typeUpdated });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = UUIDSchema("typeVehicle").parse(req.params);
+
+      const typeDeleted = await typeVehicleService.delete(
+        id,
+        typeVehicleRepository
+      );
+
+      return res.status(200).json({ message: "type deleted!", typeDeleted });
     } catch (error) {
       return next(error);
     }

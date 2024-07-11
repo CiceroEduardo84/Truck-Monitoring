@@ -19,27 +19,50 @@ export const typeVehicleRepository = {
   },
 
   async checkType(name: string) {
-    const db = await postgreSqlConnection();
+    try {
+      const db = await postgreSqlConnection();
 
-    const querySQL = "SELECT COUNT(*) FROM Type_Vehicle WHERE name = $1";
-    const totalTypes = await db.query(querySQL, [name]);
+      const querySQL = "SELECT COUNT(*) FROM Type_Vehicle WHERE name = $1";
+      const totalTypes = await db.query(querySQL, [name]);
 
-    const count = parseInt(totalTypes.rows[0].count, 10);
+      const count = parseInt(totalTypes.rows[0].count, 10);
 
-    return count;
+      return count;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async checkTypeByID(id: string) {
+    try {
+      const db = await postgreSqlConnection();
+
+      const querySQL = "SELECT COUNT(*) FROM Type_Vehicle WHERE id_type = $1";
+      const totalTypes = await db.query(querySQL, [id]);
+
+      const count = parseInt(totalTypes.rows[0].count, 10);
+
+      return count;
+    } catch (error) {
+      throw error;
+    }
   },
 
   async getTypes() {
-    const db = await postgreSqlConnection();
+    try {
+      const db = await postgreSqlConnection();
 
-    const querySQL = "SELECT id_type, name FROM Type_Vehicle;";
-    const types: QueryResult<any> = await db.query(querySQL);
+      const querySQL = "SELECT id_type, name FROM Type_Vehicle;";
+      const types: QueryResult<any> = await db.query(querySQL);
 
-    if (types.rows.length > 0) {
-      return types.rows;
+      if (types.rows.length > 0) {
+        return types.rows;
+      }
+
+      return undefined;
+    } catch (error) {
+      throw error;
     }
-
-    return undefined;
   },
 
   async updateType(data: UpdateType) {
@@ -51,6 +74,19 @@ export const typeVehicleRepository = {
       await db.query(querySQL, [name, updated_at, id]);
 
       return { id, name };
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async typeDelete(id: string) {
+    try {
+      const db = await postgreSqlConnection();
+
+      const querySQL = "DELETE FROM Type_Vehicle WHERE id_type = $1;";
+      await db.query(querySQL, [id]);
+
+      return { id };
     } catch (error) {
       throw error;
     }
