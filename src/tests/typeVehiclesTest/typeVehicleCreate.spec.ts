@@ -4,21 +4,21 @@ import { typeVehicleRepositoryInMemory } from "../../repositories/typeVehicleRep
 
 describe("test create type vehicle functions", async () => {
   it("should create a type!", async () => {
-    const userCreated = await typeVehicleService.create(
+    const typeCreated = await typeVehicleService.create(
       "Báu",
       typeVehicleRepositoryInMemory
     );
-    expect(userCreated?.name).toEqual("báu");
+    expect(typeCreated?.name).toEqual("báu");
   });
 
   it("should not create type if type already exists!", async () => {
     try {
-      const userCreated = await typeVehicleService.create(
+      const typeCreated = await typeVehicleService.create(
         "truck",
         typeVehicleRepositoryInMemory
       );
 
-      if (userCreated)
+      if (typeCreated)
         throw new Error("expected an error but the type was created!");
     } catch (error: any) {
       expect(error.message).toBe("Type already exists!");
