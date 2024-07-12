@@ -56,6 +56,11 @@ export const typeVehicleService = {
         throw appError("Type already exists!", 400);
       }
 
+      const TypeById = await repository.checkTypeByID(id);
+      if (!TypeById) {
+        throw appError("Type not found!", 400);
+      }
+
       const type = {
         id,
         name,
@@ -78,6 +83,9 @@ export const typeVehicleService = {
       }
 
       const typeDeleted = await repository.typeDelete(id);
+
+      if (!typeDeleted?.id) throw appError("type not deleted!", 500);
+
       return typeDeleted;
     } catch (error) {
       throw error;
