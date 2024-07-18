@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { UUIDSchema } from "./UUIDSchema";
 
 export const vehicleSchema = z
   .object({
@@ -35,3 +34,5 @@ export const vehicleSchema = z
       .optional(),
   })
   .strict();
+
+export type VehicleDataTypes = z.infer<typeof vehicleSchema>;
