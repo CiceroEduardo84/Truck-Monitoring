@@ -18,7 +18,7 @@ export const vehicleService = {
       const { plate, type, nameDriver, status, id_user } = data;
 
       const typeVehicle = await typeVehicleRepository.checkTypeByID(type);
-      if (!typeVehicle) throw appError("Type already exists!", 400);
+      if (!typeVehicle) throw appError("Type not found!", 400);
 
       const checkUser = await userRepository.getUserByID(id_user);
       if (!checkUser) throw appError("User not found!", 400);
