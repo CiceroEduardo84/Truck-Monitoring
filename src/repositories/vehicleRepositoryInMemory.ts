@@ -1,4 +1,8 @@
-import { CreteVehicleTypes } from "../services/vehicleService";
+import {
+  CreteVehicleTypes,
+  ReadVehicleTypes,
+} from "../services/vehicleService";
+import { VehiclePaginationSchema } from "../validations/vehiclePaginationSchema";
 
 const vehicles: CreteVehicleTypes[] = [
   {
@@ -37,6 +41,30 @@ export const vehicleRepositoryInMemory = {
       vehicles.push(createVehicle);
 
       return { id_vehicle, plate, type, nameDriver, status, id_user };
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getVehicles(data: VehiclePaginationSchema) {
+    try {
+      const { limit, offset, filter } = data;
+
+      const newVehicles = vehicles.map((vehicle) => ({
+        ...vehicle,
+        updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      }));
+
+      if (filter == "all") {
+        return newVehicles as ReadVehicleTypes[];
+      } else {
+        const filteredVehicles = newVehicles.filter(
+          (vehicle) => vehicle.status == filter
+        );
+        const paginatedVehicles = filteredVehicles.reverse();
+        return paginatedVehicles as ReadVehicleTypes[];
+      }
     } catch (error) {
       throw error;
     }
