@@ -43,4 +43,16 @@ export const vehicleControllers = {
       return next(error);
     }
   },
+
+  async delete(req: Request, res: Response, next: NextFunction){
+    try {
+      const { id } = UUIDSchema("vehicle").parse(req.params);
+
+      const vehicleData = await vehicleService.delete(id, VehicleRepository);
+
+      return res.status(200).json({ message: "Vehicle deleted!", vehicleData });
+    } catch (error) {
+      return next(error);
+    }
+  }
 };

@@ -26,6 +26,32 @@ export const VehicleRepository = {
       throw error;
     }
   },
+  async getVehicleByID(id: string) {
+    try {
+      const db = await postgreSqlConnection();
+
+      const queryUserSQL = "SELECT * FROM Vehicle WHERE id_vehicle = $1";
+      const vehicle: QueryResult<any> = await db.query(queryUserSQL, [id]);
+
+      if (vehicle.rows.length > 0) {
+        const data = vehicle.rows[0];
+        return {
+          id_vehicle: data.id_vehicle,
+          plate: data.plate,
+          type: data.id_type,
+          nameDriver: data.name_driver,
+          status: data.status,
+          id_user: data.id_user,
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+        };
+      }
+
+      return undefined;
+    } catch (error) {
+      throw error;
+    }
+  },
   async getVehicles(data: VehiclePaginationSchema) {
     try {
       const { limit, offset, filter } = data;
@@ -92,6 +118,19 @@ export const VehicleRepository = {
       }
 
       return undefined;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async deleteVehicle(id: string) {
+    try {
+      const db = await postgreSqlConnection();
+
+      const querySQL = "DELETE FROM Vehicle WHERE id_vehicle = $1;";
+      await db.query(querySQL, [id]);
+
+      return { id };
     } catch (error) {
       throw error;
     }
