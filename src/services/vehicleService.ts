@@ -19,7 +19,7 @@ export type VehicleRepositoryType = {
   getVehicles(
     data: VehiclePaginationSchema
   ): Promise<ReadVehicleTypes[] | undefined>;
-  deleteVehicle(id: string): Promise<{ id: string }>;
+  deleteVehicle(id: string): Promise<{ id: string | undefined }>;
 };
 
 export const vehicleService = {
@@ -79,7 +79,7 @@ export const vehicleService = {
 
       const vehicleDeleted = await repository.deleteVehicle(id);
 
-      if (!vehicleDeleted?.id) throw appError("Vehicle not deleted!", 500);
+      if (!vehicleDeleted?.id) throw appError("vehicle not deleted!", 500);
 
       return vehicleDeleted;
     } catch (error) {

@@ -46,6 +46,26 @@ export const vehicleRepositoryInMemory = {
     }
   },
 
+  async getVehicleByID(id: string) {
+    try {
+      const getVehicle = vehicles.find((vehicle) => vehicle.id_vehicle == id);
+
+      if (getVehicle) {
+        const newVehicles = {
+          ...getVehicle,
+          updated_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+        };
+
+        return newVehicles;
+      }
+      
+      return undefined;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async getVehicles(data: VehiclePaginationSchema) {
     try {
       const { limit, offset, filter } = data;
@@ -65,6 +85,21 @@ export const vehicleRepositoryInMemory = {
         const paginatedVehicles = filteredVehicles.reverse();
         return paginatedVehicles as ReadVehicleTypes[];
       }
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async deleteVehicle(id: string) {
+    try {
+      if (id == "2") return { id: undefined };
+      const indexVehicle = vehicles.findIndex(
+        (vehicle) => vehicle.id_vehicle == id
+      );
+
+      vehicles.splice(indexVehicle, 1);
+
+      return { id };
     } catch (error) {
       throw error;
     }
