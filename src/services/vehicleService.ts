@@ -11,6 +11,8 @@ export type ReadVehicleTypes = CreteVehicleTypes & {
   updated_at: string;
   created_at: string;
 };
+export type UpadteVehicleTypes = CreteVehicleTypes & { updated_at: Date };
+
 export type VehicleRepositoryType = {
   createVehicle(
     data: CreteVehicleTypes
@@ -19,6 +21,9 @@ export type VehicleRepositoryType = {
   getVehicles(
     data: VehiclePaginationSchema
   ): Promise<ReadVehicleTypes[] | undefined>;
+  updateVehicle(
+    data: UpadteVehicleTypes
+  ): Promise<UpadteVehicleTypes | undefined>;
   deleteVehicle(id: string): Promise<{ id: string | undefined }>;
 };
 
@@ -72,6 +77,32 @@ export const vehicleService = {
       throw error;
     }
   },
+
+  async update(data: CreteVehicleTypes, repository: VehicleRepositoryType) {
+    try {
+      const { id_vehicle, plate, type, nameDriver, status, id_user } = data;
+
+      const vehicle = await repository.getVehicleByID(id_vehicle);
+      if (!vehicle) throw appError("vehicle not found!", 400);
+
+      const vehicleToUpdate = {
+        id_vehicle,
+        plate,
+        type,
+        nameDriver,
+        status,
+        id_user,
+        updated_at: new Date(),
+      };
+      
+      const vehicleUpdate = await repository.updateVehicle(vehicleToUpdate);
+      
+      return vehicleUpdate;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async delete(id: string, repository: VehicleRepositoryType) {
     try {
       const vehicle = await repository.getVehicleByID(id);
