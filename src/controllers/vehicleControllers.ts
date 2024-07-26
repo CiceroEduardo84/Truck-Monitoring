@@ -43,8 +43,23 @@ export const vehicleControllers = {
       return next(error);
     }
   },
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const idUser = req.userID;
+      const { id } = UUIDSchema("vehicle").parse(req.params);
+      const { nameDriver, plate, type, status } = vehicleSchema.parse(req.body);
 
-  async delete(req: Request, res: Response, next: NextFunction){
+      const vehicleUpdated = await vehicleService.update(
+        { id_vehicle: id, nameDriver, plate, type, status, id_user: idUser },
+        VehicleRepository
+      );
+
+      res.status(200).json({ message: "Vehicle updated!", vehicleUpdated });
+    } catch (error) {
+      return next(error);
+    }
+  },
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = UUIDSchema("vehicle").parse(req.params);
 
@@ -54,5 +69,5 @@ export const vehicleControllers = {
     } catch (error) {
       return next(error);
     }
-  }
+  },
 };
