@@ -1,6 +1,9 @@
 import { QueryResult } from "pg";
 import { postgreSqlConnection } from "../databases/postgreSQL";
-import { CreteVehicleTypes } from "../services/vehicleService";
+import {
+  CreteVehicleTypes,
+  UpadteVehicleTypes,
+} from "../services/vehicleService";
 import { VehiclePaginationSchema } from "../validations/vehiclePaginationSchema";
 import { appError } from "../errors/appError";
 
@@ -122,7 +125,24 @@ export const VehicleRepository = {
       throw error;
     }
   },
+  async updateVehicle(data: UpadteVehicleTypes) {
+    try {
+      const { id_vehicle, plate, type, nameDriver, status, id_user, updated_at} = data;
+      const db = await postgreSqlConnection();
 
+      const querySQL = `
+        UPDATE Vehicle 
+        SET plate = $1, id_type = $2, name_driver = $3, status = $4, id_user = $5, updated_at=$6
+        WHERE id_vehicle = $7;
+      `;
+      await db.query(querySQL, [plate, type, nameDriver, status, id_user, updated_at, id_vehicle,
+      ]);
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
   async deleteVehicle(id: string) {
     try {
       const db = await postgreSqlConnection();
