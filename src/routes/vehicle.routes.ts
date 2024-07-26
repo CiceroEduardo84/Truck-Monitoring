@@ -7,5 +7,5 @@ vehicleRoutes.use(authMiddleware);
 
 vehicleRoutes.post("/vehicle", vehicleControllers.create);
 vehicleRoutes.get("/vehicle", vehicleControllers.read);
-vehicleRoutes.put("/vehicle/:id");
+vehicleRoutes.put("/vehicle/:id", vehicleControllers.update);
 vehicleRoutes.delete("/vehicle/:id",vehicleControllers.delete);
