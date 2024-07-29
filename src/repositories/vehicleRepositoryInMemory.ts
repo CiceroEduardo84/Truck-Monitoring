@@ -1,6 +1,7 @@
 import {
   CreteVehicleTypes,
   ReadVehicleTypes,
+  UpadateVehicleTypes,
 } from "../services/vehicleService";
 import { VehiclePaginationSchema } from "../validations/vehiclePaginationSchema";
 
@@ -85,6 +86,25 @@ export const vehicleRepositoryInMemory = {
         const paginatedVehicles = filteredVehicles.reverse();
         return paginatedVehicles as ReadVehicleTypes[];
       }
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async updateVehicle(data: UpadateVehicleTypes) {
+    try {
+      const {id_vehicle, plate, type, nameDriver, status, id_user, updated_at} = data;
+
+      const vehicleUpdate = {
+        id_vehicle, plate, type, nameDriver, status, id_user
+      };
+
+      const indexVehicle = vehicles.findIndex((vehicle) => vehicle.id_user == id_user);
+
+      if (indexVehicle == -1) return;
+
+      vehicles.splice(indexVehicle, 1, vehicleUpdate);
+      return { id_vehicle, plate, type, nameDriver, status, id_user, updated_at };
     } catch (error) {
       throw error;
     }

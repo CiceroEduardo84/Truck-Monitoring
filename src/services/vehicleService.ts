@@ -11,7 +11,7 @@ export type ReadVehicleTypes = CreteVehicleTypes & {
   updated_at: string;
   created_at: string;
 };
-export type UpadteVehicleTypes = CreteVehicleTypes & { updated_at: Date };
+export type UpadateVehicleTypes = CreteVehicleTypes & { updated_at: Date };
 
 export type VehicleRepositoryType = {
   createVehicle(
@@ -22,8 +22,8 @@ export type VehicleRepositoryType = {
     data: VehiclePaginationSchema
   ): Promise<ReadVehicleTypes[] | undefined>;
   updateVehicle(
-    data: UpadteVehicleTypes
-  ): Promise<UpadteVehicleTypes | undefined>;
+    data: UpadateVehicleTypes
+  ): Promise<UpadateVehicleTypes | undefined>;
   deleteVehicle(id: string): Promise<{ id: string | undefined }>;
 };
 
@@ -81,10 +81,16 @@ export const vehicleService = {
   async update(data: CreteVehicleTypes, repository: VehicleRepositoryType) {
     try {
       const { id_vehicle, plate, type, nameDriver, status, id_user } = data;
-
+      
       const vehicle = await repository.getVehicleByID(id_vehicle);
-      if (!vehicle) throw appError("vehicle not found!", 400);
+      if (!vehicle) throw appError("Vehicle not found!", 400);
 
+      const typeVehicle = await typeVehicleRepository.checkTypeByID(type);
+      if (!typeVehicle) throw appError("Type not found!", 400);
+
+      const checkUser = await userRepository.getUserByID(id_user);
+      if (!checkUser) throw appError("User not found!", 400);
+      
       const vehicleToUpdate = {
         id_vehicle,
         plate,
