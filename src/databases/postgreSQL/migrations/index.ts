@@ -7,11 +7,12 @@ import { tableVehicles } from "./tableVehicle";
 export async function runMigrations() {
   const schemas = [tableUser, tableTypeVehicle, tableVehicles].join("");
 
-  postgreSqlConnection()
-    .then((db) => {
-      db.query(schemas);
-    })
-    .catch((error) => console.log(error));
+  try {
+    const db = await postgreSqlConnection();
+    await db.query(schemas);
 
-  createAdminUser();
+    await createAdminUser();
+  } catch (error) {
+    console.log(error);
+  }
 }
