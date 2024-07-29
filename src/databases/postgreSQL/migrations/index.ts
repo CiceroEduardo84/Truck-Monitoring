@@ -10,7 +10,8 @@ export async function runMigrations() {
   postgreSqlConnection()
     .then((db) => {
       db.query(schemas);
-      createAdminUser();
     })
     .catch((error) => console.log(error));
+
+  createAdminUser();
 }
