@@ -2,7 +2,7 @@
 
 ## Entity Relationship Diagram
 
-![ERD](./erd.png)
+![ERD](./ERD.png)
 
 ## Technologies
 
