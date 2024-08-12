@@ -1,21 +1,21 @@
 import { QueryResult } from "pg";
-import { postgreSqlConnection } from "../databases/postgreSQL";
 import {
   CreteVehicleTypes,
-  UpadteVehicleTypes,
+  UpadateVehicleTypes,
 } from "../services/vehicleService";
 import { VehiclePaginationSchema } from "../validations/vehiclePaginationSchema";
 import { appError } from "../errors/appError";
+import { pool } from "../databases/postgreSQL";
 
 export const VehicleRepository = {
   async createVehicle(data: CreteVehicleTypes) {
     try {
       const { id_vehicle, plate, type, nameDriver, status, id_user } = data;
-      const db = await postgreSqlConnection();
+      const client = await pool.connect();
 
       const querySQL =
         "INSERT INTO Vehicle (id_vehicle, plate, id_type, name_driver, status, id_user) VALUES ($1, $2, $3, $4, $5, $6)";
-      await db.query(querySQL, [
+      await client.query(querySQL, [
         id_vehicle,
         plate,
         type,
@@ -24,6 +24,7 @@ export const VehicleRepository = {
         id_user,
       ]);
 
+      client.release();
       return { id_vehicle, plate, type, nameDriver, status, id_user };
     } catch (error) {
       throw error;
@@ -31,13 +32,15 @@ export const VehicleRepository = {
   },
   async getVehicleByID(id: string) {
     try {
-      const db = await postgreSqlConnection();
+      const client = await pool.connect();
 
       const queryUserSQL = "SELECT * FROM Vehicle WHERE id_vehicle = $1";
-      const vehicle: QueryResult<any> = await db.query(queryUserSQL, [id]);
+      const vehicle: QueryResult<any> = await client.query(queryUserSQL, [id]);
 
       if (vehicle.rows.length > 0) {
         const data = vehicle.rows[0];
+        client.release();
+
         return {
           id_vehicle: data.id_vehicle,
           plate: data.plate,
@@ -50,6 +53,7 @@ export const VehicleRepository = {
         };
       }
 
+      client.release();
       return undefined;
     } catch (error) {
       throw error;
@@ -59,7 +63,7 @@ export const VehicleRepository = {
     try {
       const { limit, offset, filter } = data;
 
-      const db = await postgreSqlConnection();
+      const client = await pool.connect();
       let querySQL = "";
 
       switch (filter) {
@@ -111,33 +115,52 @@ export const VehicleRepository = {
           throw appError("invalid filter!", 400);
       }
 
-      const vehicles: QueryResult<any> = await db.query(querySQL, [
+      const vehicles: QueryResult<any> = await client.query(querySQL, [
         limit,
         offset,
       ]);
 
       if (vehicles.rows.length > 0) {
+        client.release();
+
         return vehicles.rows;
       }
 
+      client.release();
       return undefined;
     } catch (error) {
       throw error;
     }
   },
-  async updateVehicle(data: UpadteVehicleTypes) {
+  async updateVehicle(data: UpadateVehicleTypes) {
     try {
-      const { id_vehicle, plate, type, nameDriver, status, id_user, updated_at} = data;
-      const db = await postgreSqlConnection();
+      const {
+        id_vehicle,
+        plate,
+        type,
+        nameDriver,
+        status,
+        id_user,
+        updated_at,
+      } = data;
+      const client = await pool.connect();
 
       const querySQL = `
         UPDATE Vehicle 
         SET plate = $1, id_type = $2, name_driver = $3, status = $4, id_user = $5, updated_at=$6
         WHERE id_vehicle = $7;
       `;
-      await db.query(querySQL, [plate, type, nameDriver, status, id_user, updated_at, id_vehicle,
+      await client.query(querySQL, [
+        plate,
+        type,
+        nameDriver,
+        status,
+        id_user,
+        updated_at,
+        id_vehicle,
       ]);
 
+      client.release();
       return data;
     } catch (error) {
       throw error;
@@ -145,11 +168,12 @@ export const VehicleRepository = {
   },
   async deleteVehicle(id: string) {
     try {
-      const db = await postgreSqlConnection();
+      const client = await pool.connect();
 
       const querySQL = "DELETE FROM Vehicle WHERE id_vehicle = $1;";
-      await db.query(querySQL, [id]);
+      await client.query(querySQL, [id]);
 
+      client.release();
       return { id };
     } catch (error) {
       throw error;

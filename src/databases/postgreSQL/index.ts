@@ -7,7 +7,7 @@ export const pool = new Pool({
   host: process.env.PGHOST,
   port: process.env.PGPORT,
   database: process.env.PGDATABASE,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  max: process.env.MAX,
+  idleTimeoutMillis: process.env.IDLETIMEOUTMILLIS,
+  connectionTimeoutMillis: process.env.CONNECTIONTIMEOUTMILLIS,
 });
