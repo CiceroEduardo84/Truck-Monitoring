@@ -11,6 +11,9 @@ declare namespace NodeJS {
     PGHOST: string;
     PGPORT: number;
     PGDATABASE: string;
+    MAX: number;
+    IDLETIMEOUTMILLIS: number;
+    CONNECTIONTIMEOUTMILLIS: number;
 
     ADMIN_EMAIL: string;
     ADMIN_PASSWORD: string;
